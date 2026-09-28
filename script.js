@@ -51,7 +51,7 @@ function spawnFruit() {
     const x = randomBetween(radius, width - radius);
     const y = height + radius + 10;
     const dx = randomBetween(-2.3, 2.3);
-    const dy = randomBetween(-18, -14); // Increased launch speed
+    const dy = randomBetween(-6.5, -3.8);
 
     fruits.push({
         x,
@@ -115,7 +115,7 @@ function updateFruits(delta) {
 
         fruit.x += fruit.dx;
         fruit.y += fruit.dy;
-        fruit.dy += 0.35; // Adjusted gravity for natural flight arc
+        fruit.dy += 0.12;
         fruit.rotation += fruit.rotationSpeed;
 
         if (detectSlice(fruit)) {
@@ -123,8 +123,7 @@ function updateFruits(delta) {
             continue;
         }
 
-        // Only remove as missed if fruit is moving downwards and exits bottom
-        if (fruit.dy > 0 && fruit.y - fruit.radius > height) {
+        if (fruit.y - fruit.radius > height) {
             fruits.splice(i, 1);
             missed += 1;
             updateUI();
@@ -189,7 +188,7 @@ function drawSlicedFruit(fruit) {
     // Left half
     ctx.beginPath();
     ctx.moveTo(-fruit.radius, -fruit.radius);
-    ctx.arc(0, 0, fruit.radius, -Math.PI / 2, Math.PI / 2, false);
+    ctx.arc(0, 0, fruit.radius, -Math.PI/2, Math.PI/2, false);
     ctx.closePath();
     ctx.fillStyle = fruit.color;
     ctx.fill();
@@ -197,7 +196,7 @@ function drawSlicedFruit(fruit) {
     // Right half
     ctx.beginPath();
     ctx.moveTo(fruit.radius, -fruit.radius);
-    ctx.arc(0, 0, fruit.radius, Math.PI / 2, -Math.PI / 2, false);
+    ctx.arc(0, 0, fruit.radius, Math.PI/2, -Math.PI/2, false);
     ctx.closePath();
     ctx.fillStyle = fruit.color;
     ctx.fill();
