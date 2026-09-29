@@ -49,9 +49,9 @@ function spawnFruit() {
 
     const radius = randomBetween(20, 32);
     const x = randomBetween(radius, width - radius);
-    const y = height - radius;
+    const y = height + radius + 10;
     const dx = randomBetween(-2.3, 2.3);
-    const dy = randomBetween(-15, -8);
+    const dy = randomBetween(-6.5, -3.8);
 
     fruits.push({
         x,
@@ -242,7 +242,7 @@ function gameLoop(timestamp) {
     lastTime = timestamp;
 
     if (!gameOver) {
-        if (!lastSpawn || timestamp - lastSpawn >= spawnInterval) {
+        if (timestamp - lastSpawn >= spawnInterval) {
             spawnFruit();
             lastSpawn = timestamp;
         }
