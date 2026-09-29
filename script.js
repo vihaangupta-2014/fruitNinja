@@ -242,7 +242,7 @@ function gameLoop(timestamp) {
     lastTime = timestamp;
 
     if (!gameOver) {
-        if (timestamp - lastSpawn >= spawnInterval) {
+        if (!lastSpawn || timestamp - lastSpawn >= spawnInterval) {
             spawnFruit();
             lastSpawn = timestamp;
         }
