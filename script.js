@@ -49,9 +49,9 @@ function spawnFruit() {
 
     const radius = randomBetween(20, 32);
     const x = randomBetween(radius, width - radius);
-    const y = height + radius + 10;
+    const y = -radius - 10;
     const dx = randomBetween(-2.3, 2.3);
-    const dy = randomBetween(-6.5, -3.8);
+    const dy = randomBetween(3.8, 6.5);
 
     fruits.push({
         x,
