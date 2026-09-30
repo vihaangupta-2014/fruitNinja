@@ -216,7 +216,13 @@ function drawParticles() {
 }
 
 function render() {
-    ctx.clearRect(0, 0, width, height);
+    const gradient = ctx.createLinearGradient(0, 0, 0, height);
+    gradient.addColorStop(0, '#87ceeb');
+    gradient.addColorStop(0.5, '#dff3ff');
+    gradient.addColorStop(1, '#eafaf1');
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, width, height);
 
     fruits.forEach((fruit) => {
         if (fruit.sliced) {
