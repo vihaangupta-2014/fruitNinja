@@ -15,7 +15,7 @@ let fruits = [];
 let particles = [];
 let lastSpawn = 0;
 let spawnInterval = 1000;
-let pointer = { x: 0, y: 0 };
+let pointer = { x: -999, y: -999 };
 
 function resizeCanvas() {
     width = window.innerWidth;
@@ -47,11 +47,11 @@ function getFruitColor() {
 function spawnFruit() {
     if (gameOver) return;
 
-    const radius = randomBetween(20, 32);
-    const x = randomBetween(radius, width - radius);
-    const y = -radius - 10;
-    const dx = randomBetween(-2.3, 2.3);
-    const dy = randomBetween(3.8, 6.5);
+    const radius = randomBetween(22, 34);
+    const x = randomBetween(radius + 50, width - radius - 50);
+    const y = height + radius; // Spawn below the bottom of the canvas
+    const dx = randomBetween(-2.5, 2.5);
+    const dy = randomBetween(-14, -18); // Negative velocity to shoot UPWARDS
 
     fruits.push({
         x,
@@ -63,7 +63,7 @@ function spawnFruit() {
         rotation: randomBetween(0, Math.PI * 2),
         rotationSpeed: randomBetween(-0.08, 0.08),
         sliced: false,
-        sliceTime: 0,
+        sliceTime: 0.4,
         isBomb: false,
     });
 }
@@ -107,6 +107,8 @@ function updateFruits(delta) {
 
         if (fruit.sliced) {
             fruit.sliceTime -= delta;
+            fruit.y += fruit.dy;
+            fruit.dy += 0.25;
             if (fruit.sliceTime <= 0) {
                 fruits.splice(i, 1);
             }
@@ -115,7 +117,7 @@ function updateFruits(delta) {
 
         fruit.x += fruit.dx;
         fruit.y += fruit.dy;
-        fruit.dy += 0.12;
+        fruit.dy += 0.28; // Gravity pulling downward
         fruit.rotation += fruit.rotationSpeed;
 
         if (detectSlice(fruit)) {
@@ -123,7 +125,8 @@ function updateFruits(delta) {
             continue;
         }
 
-        if (fruit.y - fruit.radius > height) {
+        // Fruit falls off the bottom of the screen
+        if (fruit.dy > 0 && fruit.y - fruit.radius > height) {
             fruits.splice(i, 1);
             missed += 1;
             updateUI();
@@ -181,26 +184,26 @@ function drawFruit(fruit) {
 }
 
 function drawSlicedFruit(fruit) {
-    ctx.save();
-    ctx.translate(fruit.x, fruit.y);
-    ctx.rotate(fruit.rotation);
+    const offset = (0.4 - fruit.sliceTime) * 40;
 
     // Left half
+    ctx.save();
+    ctx.translate(fruit.x - offset, fruit.y);
+    ctx.rotate(fruit.rotation - 0.2);
     ctx.beginPath();
-    ctx.moveTo(-fruit.radius, -fruit.radius);
-    ctx.arc(0, 0, fruit.radius, -Math.PI/2, Math.PI/2, false);
-    ctx.closePath();
+    ctx.arc(0, 0, fruit.radius, Math.PI / 2, (Math.PI * 3) / 2, false);
     ctx.fillStyle = fruit.color;
     ctx.fill();
+    ctx.restore();
 
     // Right half
+    ctx.save();
+    ctx.translate(fruit.x + offset, fruit.y);
+    ctx.rotate(fruit.rotation + 0.2);
     ctx.beginPath();
-    ctx.moveTo(fruit.radius, -fruit.radius);
-    ctx.arc(0, 0, fruit.radius, Math.PI/2, -Math.PI/2, false);
-    ctx.closePath();
+    ctx.arc(0, 0, fruit.radius, -Math.PI / 2, Math.PI / 2, false);
     ctx.fillStyle = fruit.color;
     ctx.fill();
-
     ctx.restore();
 }
 
